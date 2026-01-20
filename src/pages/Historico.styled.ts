@@ -1,18 +1,115 @@
 import styled from 'styled-components'
 
+export const TableWrapper = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 24px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`
+
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: 24px;
   background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  min-width: 600px;
+`
+
+export const MobileCardContainer = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    margin-top: 24px;
+  }
+`
+
+export const MobileCard = styled.div`
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+`
+
+export const MobileCardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+`
+
+export const MobileCardInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+`
+
+export const MobileCardTitle = styled.div`
+  font-weight: 600;
+  font-size: 15px;
+  color: #2d3748;
+  margin-bottom: 4px;
+  word-break: break-word;
+`
+
+export const MobileCardSubtitle = styled.div`
+  font-size: 13px;
+  color: #718096;
+  margin-bottom: 8px;
+`
+
+export const MobileCardValue = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e6b4a;
+  margin-top: 8px;
+`
+
+export const MobileCardActions = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+`
+
+export const MobileCardRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f7fafc;
+
+  &:last-child {
+    border-bottom: none;
+  }
+`
+
+export const MobileCardLabel = styled.span`
+  font-size: 13px;
+  color: #718096;
+  font-weight: 500;
+`
+
+export const MobileCardContent = styled.span`
+  font-size: 14px;
+  color: #4a5568;
+  text-align: right;
+  word-break: break-word;
 `
 
 export const TableHeader = styled.tr`
   background: linear-gradient(135deg, #2d8659 0%, #1e6b4a 100%);
   color: white;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 export const TableHeaderCell = styled.th`
@@ -21,10 +118,10 @@ export const TableHeaderCell = styled.th`
   font-weight: 600;
   font-size: 15px;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 
   @media (max-width: 768px) {
-    padding: 12px 8px;
-    font-size: 13px;
+    display: none;
   }
 `
 
@@ -45,10 +142,10 @@ export const TableCell = styled.td`
   padding: 16px;
   color: #4a5568;
   font-size: 15px;
+  white-space: nowrap;
 
   @media (max-width: 768px) {
-    padding: 12px 8px;
-    font-size: 13px;
+    display: none;
   }
 `
 
@@ -65,6 +162,7 @@ export const ExpandButton = styled.button<{ $expanded: boolean }>`
   justify-content: center;
   margin-right: 8px;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     background: #2d8659;
@@ -85,6 +183,17 @@ export const ExpandButton = styled.button<{ $expanded: boolean }>`
   svg {
     stroke-width: 2.5;
   }
+
+  @media (max-width: 768px) {
+    width: 32px;
+    height: 32px;
+    margin-right: 6px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
 `
 
 export const ExportButton = styled.button`
@@ -100,6 +209,7 @@ export const ExportButton = styled.button`
   justify-content: center;
   margin-right: 8px;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     background: rgb(33, 89, 105);
@@ -115,6 +225,17 @@ export const ExportButton = styled.button`
   svg {
     stroke-width: 2.5;
   }
+
+  @media (max-width: 768px) {
+    width: 32px;
+    height: 32px;
+    margin-right: 6px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
 `
 
 export const DeleteButton = styled.button`
@@ -129,6 +250,7 @@ export const DeleteButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     background:rgb(226, 150, 78);
@@ -143,6 +265,16 @@ export const DeleteButton = styled.button`
 
   svg {
     stroke-width: 2.5;
+  }
+
+  @media (max-width: 768px) {
+    width: 32px;
+    height: 32px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 `
 
@@ -360,6 +492,10 @@ export const FilterInput = styled.input`
   @media (max-width: 768px) {
     padding: 12px 14px 12px 44px;
     font-size: 14px;
+
+    &::placeholder {
+      font-size: 13px;
+    }
   }
 `
 

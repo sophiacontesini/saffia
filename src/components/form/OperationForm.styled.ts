@@ -58,6 +58,12 @@ export const Label = styled.label`
 export const InputWrapper = styled.div`
   position: relative;
   width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    overflow: hidden;
+  }
 `
 
 export const InputIcon = styled.div`
@@ -99,11 +105,13 @@ export const Input = styled.input<{ hasIcon?: boolean }>`
   color: #2d3748;
   background: #ffffff;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 
   @media (max-width: 768px) {
     padding: 10px 14px;
     padding-left: ${props => (props.hasIcon ? '38px' : '14px')};
     font-size: 16px;
+    max-width: 100%;
   }
 
   &:focus {
@@ -128,6 +136,34 @@ export const Input = styled.input<{ hasIcon?: boolean }>`
 
   &[type="number"] {
     -moz-appearance: textfield;
+  }
+
+  &[type="date"] {
+    position: relative;
+    
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      opacity: 0.6;
+      width: 20px;
+      height: 20px;
+      z-index: 2;
+    }
+
+    &::-webkit-calendar-picker-indicator:hover {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      &::-webkit-calendar-picker-indicator {
+        right: 10px;
+        width: 18px;
+        height: 18px;
+      }
+    }
   }
 `
 
@@ -199,6 +235,8 @@ export const RowEqual = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -209,9 +247,17 @@ export const RowEqual = styled.div`
 export const FieldGroup = styled.div`
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 
   label {
     margin-top: 0;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    max-width: 100%;
   }
 `
 

@@ -8,7 +8,8 @@ import {
   FaMoneyBillWave,
   FaPercent,
   FaFileInvoiceDollar,
-  FaReceipt
+  FaReceipt,
+  FaCalendarAlt
 } from 'react-icons/fa'
 import {
   Card,
@@ -258,11 +259,17 @@ export default function OperationForm({ onCalcular }: Props) {
         </FieldGroup>
         <FieldGroup>
           <Label>Data de Vencimento</Label>
-          <Input
-            type="date"
-            value={vencimento}
-            onChange={e => setVencimento(e.target.value)}
-          />
+          <InputWrapper>
+            <InputIcon>
+              <FaCalendarAlt />
+            </InputIcon>
+            <Input
+              hasIcon
+              type="date"
+              value={vencimento}
+              onChange={e => setVencimento(e.target.value)}
+            />
+          </InputWrapper>
         </FieldGroup>
       </RowEqual>
 

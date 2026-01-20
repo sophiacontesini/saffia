@@ -6,6 +6,7 @@ import type { HistoricoOrcamento, StatusOrcamento } from '../utils/history'
 import { exportToPDF } from '../utils/pdfExport'
 import { HiChevronDown, HiChevronRight, HiTrash, HiDocumentDownload, HiSearch } from 'react-icons/hi'
 import {
+  TableWrapper,
   Table,
   TableHeader,
   TableRow,
@@ -20,7 +21,18 @@ import {
   EmptyMessage,
   FilterContainer,
   FilterInput,
-  FilterIcon
+  FilterIcon,
+  MobileCardContainer,
+  MobileCard,
+  MobileCardHeader,
+  MobileCardInfo,
+  MobileCardTitle,
+  MobileCardSubtitle,
+  MobileCardValue,
+  MobileCardActions,
+  MobileCardRow,
+  MobileCardLabel,
+  MobileCardContent
 } from './Historico.styled'
 import ResultCard from '../components/card/ResultCard'
 
@@ -137,21 +149,127 @@ export default function Historico() {
             Nenhum orçamento encontrado com o filtro "{filtro}".
           </EmptyMessage>
         ) : (
-          <Table>
-            <thead>
-              <TableHeader>
-                <TableHeaderCell>Status</TableHeaderCell>
-                <TableHeaderCell>Data</TableHeaderCell>
-                <TableHeaderCell>Cedente</TableHeaderCell>
-                <TableHeaderCell>Valor</TableHeaderCell>
-                <TableHeaderCell>Ações</TableHeaderCell>
-              </TableHeader>
-            </thead>
-            <tbody>
+          <>
+            <TableWrapper>
+              <Table>
+                <thead>
+                  <TableHeader>
+                    <TableHeaderCell>Status</TableHeaderCell>
+                    <TableHeaderCell>Data</TableHeaderCell>
+                    <TableHeaderCell>Cedente</TableHeaderCell>
+                    <TableHeaderCell>Valor</TableHeaderCell>
+                    <TableHeaderCell>Ações</TableHeaderCell>
+                  </TableHeader>
+                </thead>
+                <tbody>
+                  {historicoFiltrado.map((orcamento) => (
+                    <React.Fragment key={orcamento.id}>
+                      <TableRow>
+                        <TableCell>
+                          <StatusSelectWrapper $status={orcamento.status || 'Em Análise'}>
+                            <StatusSelect
+                              value={orcamento.status || 'Em Análise'}
+                              onChange={(e) => handleStatusChange(orcamento.id, e.target.value as StatusOrcamento)}
+                              $status={orcamento.status || 'Em Análise'}
+                            >
+                              <option value="Cancelado">Cancelado</option>
+                              <option value="Em Análise">Em Análise</option>
+                              <option value="Concluído">Concluído</option>
+                            </StatusSelect>
+                          </StatusSelectWrapper>
+                        </TableCell>
+                        <TableCell>{orcamento.data}</TableCell>
+                        <TableCell>{orcamento.cedente || '-'}</TableCell>
+                        <TableCell>
+                          {orcamento.valor.toLocaleString('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL'
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          <ExpandButton
+                            onClick={() => handleToggleExpand(orcamento.id)}
+                            $expanded={expandedId === orcamento.id}
+                          >
+                            {expandedId === orcamento.id ? (
+                              <HiChevronDown size={18} />
+                            ) : (
+                              <HiChevronRight size={18} />
+                            )}
+                          </ExpandButton>
+                          <ExportButton onClick={() => handleExportPDF(orcamento)}>
+                            <HiDocumentDownload size={16} />
+                          </ExportButton>
+                          <DeleteButton onClick={() => handleExcluir(orcamento.id)}>
+                            <HiTrash size={16} />
+                          </DeleteButton>
+                        </TableCell>
+                      </TableRow>
+                      {expandedId === orcamento.id && (
+                        <TableRow>
+                          <TableCell colSpan={5}>
+                            <ExpandedContent>
+                              <ResultCard
+                                resultado={orcamento.resultado}
+                                dias={orcamento.dias}
+                                taxas={orcamento.taxas}
+                                valor={orcamento.valor}
+                                desagioPercent={orcamento.desagioPercent}
+                                cedente={orcamento.cedente}
+                                tipoDocumentoCedente={orcamento.tipoDocumentoCedente}
+                                documentoCedente={orcamento.documentoCedente}
+                                sacado={orcamento.sacado}
+                                tipoDocumentoSacado={orcamento.tipoDocumentoSacado}
+                                documentoSacado={orcamento.documentoSacado}
+                                hideButtons={true}
+                              />
+                            </ExpandedContent>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </tbody>
+              </Table>
+            </TableWrapper>
+
+            <MobileCardContainer>
               {historicoFiltrado.map((orcamento) => (
-                <React.Fragment key={orcamento.id}>
-                  <TableRow>
-                    <TableCell>
+                <MobileCard key={orcamento.id}>
+                  <MobileCardHeader>
+                    <MobileCardInfo>
+                      <MobileCardTitle>{orcamento.cedente || 'Sem cedente'}</MobileCardTitle>
+                      <MobileCardSubtitle>{orcamento.data}</MobileCardSubtitle>
+                      <MobileCardValue>
+                        {orcamento.valor.toLocaleString('pt-BR', {
+                          style: 'currency',
+                          currency: 'BRL'
+                        })}
+                      </MobileCardValue>
+                    </MobileCardInfo>
+                    <MobileCardActions>
+                      <ExpandButton
+                        onClick={() => handleToggleExpand(orcamento.id)}
+                        $expanded={expandedId === orcamento.id}
+                      >
+                        {expandedId === orcamento.id ? (
+                          <HiChevronDown size={16} />
+                        ) : (
+                          <HiChevronRight size={16} />
+                        )}
+                      </ExpandButton>
+                      <ExportButton onClick={() => handleExportPDF(orcamento)}>
+                        <HiDocumentDownload size={16} />
+                      </ExportButton>
+                      <DeleteButton onClick={() => handleExcluir(orcamento.id)}>
+                        <HiTrash size={16} />
+                      </DeleteButton>
+                    </MobileCardActions>
+                  </MobileCardHeader>
+                  
+                  <MobileCardRow>
+                    <MobileCardLabel>Status:</MobileCardLabel>
+                    <MobileCardContent>
                       <StatusSelectWrapper $status={orcamento.status || 'Em Análise'}>
                         <StatusSelect
                           value={orcamento.status || 'Em Análise'}
@@ -163,60 +281,31 @@ export default function Historico() {
                           <option value="Concluído">Concluído</option>
                         </StatusSelect>
                       </StatusSelectWrapper>
-                    </TableCell>
-                    <TableCell>{orcamento.data}</TableCell>
-                    <TableCell>{orcamento.cedente || '-'}</TableCell>
-                    <TableCell>
-                      {orcamento.valor.toLocaleString('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                      })}
-                    </TableCell>
-                    <TableCell>
-                      <ExpandButton
-                        onClick={() => handleToggleExpand(orcamento.id)}
-                        $expanded={expandedId === orcamento.id}
-                      >
-                        {expandedId === orcamento.id ? (
-                          <HiChevronDown size={18} />
-                        ) : (
-                          <HiChevronRight size={18} />
-                        )}
-                      </ExpandButton>
-                      <ExportButton onClick={() => handleExportPDF(orcamento)}>
-                        <HiDocumentDownload size={16} />
-                      </ExportButton>
-                      <DeleteButton onClick={() => handleExcluir(orcamento.id)}>
-                        <HiTrash size={16} />
-                      </DeleteButton>
-                    </TableCell>
-                  </TableRow>
+                    </MobileCardContent>
+                  </MobileCardRow>
+
                   {expandedId === orcamento.id && (
-                    <TableRow>
-                      <TableCell colSpan={5}>
-                        <ExpandedContent>
-                          <ResultCard
-                            resultado={orcamento.resultado}
-                            dias={orcamento.dias}
-                            taxas={orcamento.taxas}
-                            valor={orcamento.valor}
-                            desagioPercent={orcamento.desagioPercent}
-                            cedente={orcamento.cedente}
-                            tipoDocumentoCedente={orcamento.tipoDocumentoCedente}
-                            documentoCedente={orcamento.documentoCedente}
-                            sacado={orcamento.sacado}
-                            tipoDocumentoSacado={orcamento.tipoDocumentoSacado}
-                            documentoSacado={orcamento.documentoSacado}
-                            hideButtons={true}
-                          />
-                        </ExpandedContent>
-                      </TableCell>
-                    </TableRow>
+                    <ExpandedContent style={{ marginTop: '16px', marginBottom: 0 }}>
+                      <ResultCard
+                        resultado={orcamento.resultado}
+                        dias={orcamento.dias}
+                        taxas={orcamento.taxas}
+                        valor={orcamento.valor}
+                        desagioPercent={orcamento.desagioPercent}
+                        cedente={orcamento.cedente}
+                        tipoDocumentoCedente={orcamento.tipoDocumentoCedente}
+                        documentoCedente={orcamento.documentoCedente}
+                        sacado={orcamento.sacado}
+                        tipoDocumentoSacado={orcamento.tipoDocumentoSacado}
+                        documentoSacado={orcamento.documentoSacado}
+                        hideButtons={true}
+                      />
+                    </ExpandedContent>
                   )}
-                </React.Fragment>
+                </MobileCard>
               ))}
-            </tbody>
-          </Table>
+            </MobileCardContainer>
+          </>
         )}
       </PageCard>
     </Container>
